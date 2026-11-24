@@ -1,64 +1,64 @@
-# Testing Grundlagen
+# Testing Basics
 
-## Aufgabe 1
+## Task 1
 
-Welche Formen von Tests kennen Sie aus der Informatik?
-Arbeiten Sie zu zweit und erläutern Sie mind. drei Beispiele, die Sie aus der Praxis kennen.
-Wie werden die Tests durchgeführt?
+What kinds of tests do you know from computer science?
+Work in pairs and explain at least three examples you know from practice.
+How are the tests carried out?
 
-- **Unit-Test:** einzelne Methode testen, Entwickler schreibt Code der die Methode aufruft und Resultat prueft
-- **Integrationstest:** pruefen ob mehrere Teile zusammen funktionieren, z.B. Frontend mit API
-- **Regressionstest:** nach einer Aenderung pruefen ob alte Sachen noch gehen, meist automatisch
+- **Unit test:** test a single method, developer writes code that calls the method and checks the result
+- **Integration test:** check whether multiple parts work together, e.g. frontend with API
+- **Regression test:** after a change, check whether old stuff still works, usually automated
 
-## Aufgabe 2
+## Task 2
 
-Nennen Sie ein Beispiel eines SW-Fehlers und eines SW-Mangels.
-Nennen Sie ein Beispiel für einen hohen Schaden bei einem SW-Fehler.
+Give an example of a SW error and a SW deficiency.
+Give an example of high damage caused by a SW error.
 
-- Fehler: Webshop rechnet das Total falsch
-- Mangel: Total stimmt, wird aber unleserlich angezeigt
-- Hoher Schaden: Softwarefehler, falsche Medizin-dosis
+- Error: web shop calculates the total wrong
+- Deficiency: total is correct, but it's displayed unreadably
+- High damage: software error, wrong medication dose
 
-## Aufgabe 3
+## Task 3
 
-Eine Software gliedert sich in der Regel in eine Reihe von Teilsystemen, die wiederum aus einer Vielzahl elementarer
-Komponenten besteht. Wir haben im V-Modell gesehen, dass es verschiedene Teststufen gibt. Wir wollen in diesem
-Zusammenhang nun ein Beispiel der untersten Stufe anschauen.
+Software is usually divided into a number of subsystems, which in turn consist of many elementary
+components. We saw in the V-model that there are different test levels. In this
+context, we now want to look at an example of the lowest level.
 
-**Beispiel Test in der Klasse Preisberechnung**
+**Example: test in the class Preisberechnung (price calculation)**
 
-In der Auto-Verkauf Software werden Preise mit Rabatten versehen.
-Wir haben folgende Elemente und Regeln:
-Es besteht ein Grundpreis (*baseprice*), abzüglich Händlerrabatt (*discount*).
-Dazu kommen Sondermodellaufschlag (*specialprice*) und der Preis für weitere Zusatzaustattungen (*extraprice*).
-Wenn drei oder mehr Zusatzausstattungen (*extras*) ausgewählt werden, dann erfolgt ein Rabatt von 10% auf diesen
-Ausstattungen. Wenn es fünf oder mehr Zusatzausstattungen sind, dann ist der Rabatt bei 15%.
-Der Händlerrabatt bezieht sich auf den Grundpreis. Der Zubehörrabatt gilt nur für den Preis der Zubehörteile.
-Ein Code würde somit so aussehen:
+In the car sales software, prices are given discounts.
+We have the following elements and rules:
+There is a base price (_baseprice_), minus a dealer discount (_discount_).
+Added to that are the special model surcharge (_specialprice_) and the price for additional equipment (_extraprice_).
+If three or more extras (_extras_) are selected, there is a 10% discount on these
+extras. If there are five or more extras, the discount is 15%.
+The dealer discount applies to the base price. The extras discount only applies to the price of the extras.
+The code would therefore look like this:
 
 ```
 double calculatePrice(double baseprice, double specialprice, double extraprice, int extras, double discount) {
     double addon_discount;
     double result;
-    
-    if (extras >= 3) 
+
+    if (extras >= 3)
         addon_discount = 10;
     else if (extras >= 5)
         addon_discount = 15;
-    else 
+    else
         addon_discount = 0;
-    
+
     if (discount > addon_discount)
         addon_discount = discount;
-    
+
     result = baseprice/100.0 * (100-discount) + specialprice
             + extraprice/100.0 * (100-addon_discount);
-    
+
     return result;
 }
 ```
 
-Setzen Sie diesen Code in Ihrer Entwicklerumgebung um. Erstellen Sie nun einen entsprechenden *Testtreiber*, um diese Preisberechnung zu testen. Ein Testtreiber ist ein Programm, das die jeweiligen Schnittstellenaufrufe (Methoden-Aufruf) ausführt und anschliessend das Resultat zurückerhält. Skizzenhaft würde das so aussehen:
+Implement this code in your development environment. Now create a corresponding _test driver_ to test this price calculation. A test driver is a program that executes the respective interface calls (method calls) and then receives the result. Roughly sketched, it would look like this:
 
 ```
 boolean test_calculate_price(){
@@ -71,8 +71,8 @@ boolean test_calculate_price(){
 }
 ```
 
-Achtung: Wir schreiben hier keine Unit-Tests. Unit-Tests werden wir später im Modul anwenden.
-Stellen Sie Ihre Tests ins Repository und zeigen Sie Ihre Lösung der Lehrperson.
+Note: We are not writing unit tests here. We will use unit tests later in the module.
+Put your tests in the repository and show your solution to the teacher.
 
 ```java
 public class Preisberechnung {
@@ -127,9 +127,9 @@ public class TestTreiber {
 }
 ```
 
-## Aufgabe 3 - Bonus
+## Task 3 - Bonus
 
-Das Programmstück ist fehlerhaft ;) Finden Sie den Fehler im Code. Was müsste man korrigieren?
+The code snippet has a bug ;) Find the bug in the code. What would need to be fixed?
 
-- Die if-Reihenfolge ist falsch: `>= 3` kommt vor `>= 5`, darum gibts nie 15%. `>= 5` muss zuerst kommen.
-- `if (discount > addon_discount) addon_discount = discount;` rechnet den Händlerrabatt auch auf die Extras. Gehört weg.
+- The if order is wrong: `>= 3` comes before `>= 5`, so you never get 15%. `>= 5` has to come first.
+- `if (discount > addon_discount) addon_discount = discount;` applies the dealer discount to the extras too. Should be removed.
